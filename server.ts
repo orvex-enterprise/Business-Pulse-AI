@@ -1,7 +1,7 @@
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
-import { app } from './server/app.js';
-import { Scheduler } from './server/jobs/scheduler.js';
+import { app } from './server/app';
+import { Scheduler } from './server/jobs/scheduler';
 
 async function startServer() {
   const PORT = 3000;
@@ -19,11 +19,10 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    import('express').then((express) => {
-        app.use(express.default.static(distPath));
-        app.get('*', (req, res) => {
-          res.sendFile(path.join(distPath, 'index.html'));
-        });
+    const express = await import('express');
+    app.use(express.default.static(distPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 

@@ -1,4 +1,4 @@
-import { mockFiles } from '../routes/connections.js';
+import { mockFiles } from '../routes/connections';
 
 export function getWorkspaceMetrics(workspaceId: string) {
   const userFiles = mockFiles.filter(f => f.workspaceId === workspaceId);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { mockRecords } from './mockRecords.js';
-import { AIAgent } from '../agents/aiAgent.js';
-import { fetchIndustryNews } from '../services/newsService.js';
+import { mockRecords } from './mockRecords';
+import { AIAgent } from '../agents/aiAgent';
+import { fetchIndustryNews } from '../services/newsService';
 const agent = new AIAgent();
 
 const router = Router();

@@ -1,6 +1,6 @@
-import { workspaceSettings } from '../routes/settings.js';
-import { mockRecords } from '../routes/mockRecords.js';
-import { sendTelegramAlert } from '../services/telegram.js';
+import { workspaceSettings } from '../routes/settings';
+import { mockRecords } from '../routes/mockRecords';
+import { sendTelegramAlert } from '../services/telegram';
 
 export class Scheduler {
   private jobs: NodeJS.Timeout[] = [];

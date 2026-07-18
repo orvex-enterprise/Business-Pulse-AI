@@ -1,4 +1,4 @@
-import { fetchIndustryNews } from '../services/newsService.js';
+import { fetchIndustryNews } from '../services/newsService';
 import { GoogleGenAI, Type } from '@google/genai';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'mock-key' });

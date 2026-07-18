@@ -35,10 +35,16 @@ export function Login() {
         body: JSON.stringify(payload)
       })
 
-      const data = await res.json()
-
+      let data;
+      const text = await res.text();
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        throw new Error(`Server returned ${res.status} ${res.statusText}: ${text.slice(0, 100)}`);
+      }
+      
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed')
+        throw new Error(data.error || 'Authentication failed');
       }
 
       // Successful auth
@@ -90,10 +96,16 @@ export function Login() {
         body: JSON.stringify(payload)
       })
       
-      const data = await res.json()
+      let data;
+      const text = await res.text();
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (e) {
+        throw new Error(`Server returned ${res.status} ${res.statusText}: ${text.slice(0, 100)}`);
+      }
       
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed')
+        throw new Error(data.error || 'Authentication failed');
       }
       
       login({

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { AIAgent } from '../agents/aiAgent.js';
-import { getWorkspaceMetrics } from '../utils/metrics.js';
+import { AIAgent } from '../agents/aiAgent';
+import { getWorkspaceMetrics } from '../utils/metrics';
 
 const router = Router();
 const aiAgent = new AIAgent();

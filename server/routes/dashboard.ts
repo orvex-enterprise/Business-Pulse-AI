@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { Pool } from 'pg';
-import { AIAgent } from '../agents/aiAgent.js';
+import { AIAgent } from '../agents/aiAgent';
 import crypto from 'crypto';
-import { mockConnections } from './connections.js'; 
-import { sendTelegramAlert } from '../services/telegram.js';
+import { mockConnections } from './connections'; 
+import { sendTelegramAlert } from '../services/telegram';
 
-import { getWorkspaceMetrics } from '../utils/metrics.js';
-import { fetchIndustryNews } from '../services/newsService.js';
-import { mockRecords } from './mockRecords.js';
+import { getWorkspaceMetrics } from '../utils/metrics';
+import { fetchIndustryNews } from '../services/newsService';
+import { mockRecords } from './mockRecords';
 
 const router = Router();
 const agent = new AIAgent();
@@ -150,7 +150,6 @@ router.post('/', async (req, res) => {
 
 
 let globalPool: Pool | undefined;
-
 function getPool() {
   if (!process.env.DATABASE_URL) return undefined;
   if (!globalPool) {
@@ -161,6 +160,8 @@ function getPool() {
   }
   return globalPool;
 }
+
+
 
 router.get('/metrics', async (req, res) => {
   try {

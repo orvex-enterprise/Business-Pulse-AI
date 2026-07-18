@@ -1,13 +1,13 @@
 import express from 'express';
-import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
-import inventoryRoutes from './routes/inventory.js';
-import trendsRoutes from './routes/trends.js';
+import authRoutes from './routes/auth';
+import dashboardRoutes from './routes/dashboard';
+import inventoryRoutes from './routes/inventory';
+import trendsRoutes from './routes/trends';
 
-import notificationsRoutes from './routes/notifications.js';
-import connectionsRoutes from './routes/connections.js';
-import pipelineRoutes from './routes/pipeline.js';
-import settingsRoutes from './routes/settings.js';
+import notificationsRoutes from './routes/notifications';
+import connectionsRoutes from './routes/connections';
+import pipelineRoutes from './routes/pipeline';
+import settingsRoutes from './routes/settings';
 
 export const app = express();
 app.use(express.json());

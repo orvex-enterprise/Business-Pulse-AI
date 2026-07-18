@@ -23,7 +23,7 @@ function encrypt(text: string) {
   return iv.toString('hex') + ':' + encrypted.toString('hex');
 }
 
-function decrypt(text: string) {
+export function decrypt(text: string) {
   const textParts = text.split(':');
   const iv = Buffer.from(textParts.shift() as string, 'hex');
   const encryptedText = Buffer.from(textParts.join(':'), 'hex');
