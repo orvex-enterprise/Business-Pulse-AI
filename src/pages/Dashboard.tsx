@@ -50,7 +50,14 @@ export function Dashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ industry, dataConnections: connections.map(c => c.name), workspaceId, phoneNumber })
       });
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
+      };
       if (!res.ok) throw new Error(data.error || 'Failed to fetch dashboard');
       return data;
     },

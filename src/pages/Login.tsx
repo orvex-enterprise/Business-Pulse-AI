@@ -37,10 +37,17 @@ export function Login() {
         body: JSON.stringify(payload)
       })
 
-      const data = await res.json()
-
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
+      }
+      
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed')
+        throw new Error(data?.error || 'Authentication failed')
       }
 
       // Successful auth

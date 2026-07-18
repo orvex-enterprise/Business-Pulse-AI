@@ -31,7 +31,14 @@ export function Onboarding() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: store.databaseType?.toLowerCase(), credentials: dbCreds })
       })
-      const data = await res.json()
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
+      }
       if (res.ok) {
         setTestStatus('success')
         setTestMsg('Connection successful!')
@@ -63,7 +70,14 @@ export function Onboarding() {
         method: 'POST',
         body: formData
       })
-      const data = await res.json()
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
+      }
       if (res.ok) {
         setTestStatus('success')
         setTestMsg(`Successfully processed ${data.files.length} file(s). Schemas detected.`)
