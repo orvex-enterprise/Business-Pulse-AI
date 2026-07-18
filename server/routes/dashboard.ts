@@ -149,11 +149,25 @@ router.post('/', async (req, res) => {
 });
 
 
+let globalPool: Pool | undefined;
+
+function getPool() {
+  if (!process.env.DATABASE_URL) return undefined;
+  if (!globalPool) {
+    globalPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.NODE_ENV === 'production' || process.env.DATABASE_URL?.includes('neon.tech') ? { rejectUnauthorized: false } : undefined
+    });
+  }
+  return globalPool;
+}
+
 router.get('/metrics', async (req, res) => {
   try {
     const workspaceId = (req.query.workspaceId as string) || 'ws_123';
     
-    if (!process.env.DATABASE_URL) {
+    const pool = getPool();
+    if (!pool) {
       // Fallback to mockRecords for CSV uploads if DB is not connected
       const records = mockRecords.filter((r: any) => r.workspaceId === workspaceId);
       
@@ -207,11 +221,6 @@ router.get('/metrics', async (req, res) => {
       });
     }
 
-    const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' || process.env.DATABASE_URL?.includes('neon.tech') ? { rejectUnauthorized: false } : undefined
-    });
-    
     const [
       totalSkusResult,
       totalInventoryResult,

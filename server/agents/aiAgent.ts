@@ -83,7 +83,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text || '{}');
+      return this.parseJSON(response.text, '{}');
     } catch (e: any) {
       console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
       console.log(`[AI Agent] Falling back to mock dashboard data.`);
@@ -126,7 +126,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text || '[]');
+      return this.parseJSON(response.text, '[]');
     } catch (e: any) {
       console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
       console.log(`[AI Agent] Falling back to mock inventory data.`);
@@ -186,7 +186,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text || '[]');
+      return this.parseJSON(response.text, '[]');
     } catch(e: any) {
         console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
         console.log(`[AI Agent] Falling back to mock trends data.`);
@@ -239,7 +239,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text || '[]');
+      return this.parseJSON(response.text, '[]');
     } catch(e: any) {
       console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
             return this.mockStocks(industry);
@@ -384,10 +384,27 @@ Return data strictly in JSON formatting matching this schema:
           }
         }
       });
-      return JSON.parse(response.text || '{}');
+      return this.parseJSON(response.text, '{}');
     } catch (e) {
       console.error('Failed to generate news-driven inventory', e);
       return this.mockNewsDrivenInventory();
+    }
+  }
+
+  
+  private parseJSON(text: string | null | undefined, fallback: string) {
+    if (!text) return JSON.parse(fallback);
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      // Try stripping markdown code blocks
+      const match = text.match(/\x60\x60\x60(?:json)?\s*([\s\S]*?)\s*\x60\x60\x60/);
+      if (match) {
+        try {
+          return JSON.parse(match[1]);
+        } catch (e2) {}
+      }
+      return JSON.parse(fallback);
     }
   }
 
