@@ -82,7 +82,7 @@ export function Trends() {
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Market Trends</h2>
         <p className="text-zinc-500 dark:text-zinc-400">
-          Discover emerging opportunities and shifting customer preferences for {selectedIndustry || "your business sector"}.
+          Discover emerging opportunities and shifting customer preferences for {selectedIndustry}.
         </p>
       </div>
 
@@ -96,7 +96,7 @@ export function Trends() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {trends.summary || `Based on analyzing market data points for ${selectedIndustry || "your business sector"}...`}
+              {trends.summary || `Based on analyzing market data points for ${selectedIndustry}...`}
             </p>
             <div className="flex gap-2">
               <Badge variant="secondary">Growth Strategy</Badge>

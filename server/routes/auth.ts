@@ -97,44 +97,4 @@ router.get('/me', (req, res) => {
   res.json({ id: '1', name: 'Admin', role: 'Super Admin' });
 });
 
-
-router.post('/google', (req, res) => {
-  const { email, name, picture } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required from Google' });
-  }
-  
-  let user = mockUsers.find(u => u.email === email);
-  let isNewSignup = false;
-  
-  if (!user) {
-    isNewSignup = true;
-    user = {
-      id: Date.now().toString(),
-      name: name || email.split('@')[0],
-      email: email,
-      role: 'Company Admin',
-      picture
-    };
-    mockUsers.push(user);
-    
-    const newWorkspace = {
-      id: `ws_${Date.now()}`,
-      ownerId: user.id,
-      name: `${user.name}'s Workspace`
-    };
-    mockWorkspaces.push(newWorkspace);
-  }
-  
-  const userWorkspace = mockWorkspaces.find(ws => ws.ownerId === user.id);
-  
-  res.json({
-    user,
-    token: 'mock-jwt-token-google',
-    hasWorkspace: !!userWorkspace,
-    workspaceId: userWorkspace?.id || null,
-    isNewSignup
-  });
-});
-
 export default router;

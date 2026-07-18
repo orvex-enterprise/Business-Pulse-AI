@@ -31,14 +31,7 @@ export function Onboarding() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: store.databaseType?.toLowerCase(), credentials: dbCreds })
       })
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
-      }
+      const data = await res.json()
       if (res.ok) {
         setTestStatus('success')
         setTestMsg('Connection successful!')
@@ -70,14 +63,7 @@ export function Onboarding() {
         method: 'POST',
         body: formData
       })
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
-      }
+      const data = await res.json()
       if (res.ok) {
         setTestStatus('success')
         setTestMsg(`Successfully processed ${data.files.length} file(s). Schemas detected.`)
@@ -105,10 +91,6 @@ export function Onboarding() {
   }
 
   const handleNext = async () => {
-    if (store.step === 1 && !store.industry?.trim()) {
-      alert("Please provide an Industry to continue.");
-      return;
-    }
     if (store.step === 2 && !store.databaseType) {
       alert("Please add a database to continue, or click Skip.");
       return;
@@ -130,7 +112,7 @@ export function Onboarding() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             companyName: store.companyName || 'Acme Corp',
-            industry: store.industry,
+            industry: store.industry || 'Tech Retail',
             businessType: store.businessType,
             country: store.country,
             phoneNumber: store.phoneNumber,
@@ -156,7 +138,7 @@ export function Onboarding() {
 
       setCompanyDetails({
         companyName: store.companyName || 'Acme Corp',
-        industry: store.industry
+        industry: store.industry || 'Tech Retail'
       })
       if (store.databaseType && store.databaseConnectionStr) {
         addConnection({
@@ -451,7 +433,7 @@ export function Onboarding() {
             >
               Back
             </Button>
-            <Button onClick={handleNext} disabled={store.step === 1 && !store.industry?.trim()}>
+            <Button onClick={handleNext}>
               {store.step === 5 ? 'Go to Dashboard' : 'Continue'}
             </Button>
           </div>

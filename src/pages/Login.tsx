@@ -7,8 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/store/useAuthStore'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { GoogleLogin } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 
 export function Login() {
   const navigate = useNavigate()
@@ -37,17 +35,10 @@ export function Login() {
         body: JSON.stringify(payload)
       })
 
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(res.ok ? 'Unexpected response format' : 'API Error: ' + res.status);
-      }
-      
+      const data = await res.json()
+
       if (!res.ok) {
-        throw new Error(data?.error || 'Authentication failed')
+        throw new Error(data.error || 'Authentication failed')
       }
 
       // Successful auth
@@ -79,51 +70,10 @@ export function Login() {
     }
   }
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    setError('')
-    setLoading(true)
-    try {
-      const decoded: any = jwtDecode(credentialResponse.credential)
-      
-      const res = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: decoded.email, name: decoded.name, picture: decoded.picture })
-      })
-      
-      let data;
-      const contentType = res.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(res.ok ? 'Unexpected response format' : 'Server Error: ' + res.status);
-      }
-      
-      if (!res.ok) throw new Error(data?.error || 'Google Authentication failed')
-      
-      login({
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        role: data.user.role,
-      }, data.token)
-
-      if (data.workspaceId) {
-        localStorage.setItem('currentWorkspaceId', data.workspaceId)
-      }
-      if (data.isNewSignup) {
-        navigate('/onboarding')
-      } else if (data.hasWorkspace) {
-        navigate('/')
-      } else {
-        navigate('/onboarding')
-      }
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+  const handleGoogleAuth = (e: React.MouseEvent) => {
+    e.preventDefault()
+    // Simulated Google OAuth Flow
+    handleAuth({ preventDefault: () => {} } as any)
   }
 
   return (
@@ -221,15 +171,9 @@ export function Login() {
                   </div>
                 </div>
 
-                <div className="flex justify-center w-full">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={() => {
-                      setError('Google Sign-In Failed')
-                    }}
-                    useOneTap
-                  />
-                </div>
+                <Button type="button" variant="outline" className="w-full" onClick={handleGoogleAuth} disabled={loading}>
+                  Google
+                </Button>
               </form>
             </Tabs>
           </div>

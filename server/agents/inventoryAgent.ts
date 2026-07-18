@@ -23,7 +23,7 @@ export class InventoryAgent {
         recommendation: 'Reorder immediately'
       };
     } catch (e) {
-      console.warn('[Inventory Agent] Analysis fallback used.');
+      console.error(e);
       return { severity: 'critical', message: 'Analysis failed', recommendation: 'Manual check required' };
     }
   }

@@ -2,8 +2,8 @@ import { Router } from 'express';
 import crypto from 'crypto';
 import multer from 'multer';
 import { parse } from 'csv-parse/sync';
-import { mapToNormalizedProduct, extractDataArray } from '../utils/dataMapper.js';
-import { mockRecords } from './mockRecords.js';
+import { mapToNormalizedProduct, extractDataArray } from '../utils/dataMapper';
+import { mockRecords } from './mockRecords';
 
 
 const router = Router();
