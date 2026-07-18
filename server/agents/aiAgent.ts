@@ -19,7 +19,7 @@ export class AIAgent {
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-1.5-flash',
         contents: `Generate a dashboard overview for a company in the ${industry} industry. They have the following data connections: ${dataConnections.join(', ') || 'None'}. Provide 7 days of inventory trends and 4 weeks of alert frequency. Provide 3 AI recommendations based on the news, and 3 recent alerts. Also provide a marketSentiment summary based on these news headlines: ${news ? news.map((n: any) => n.title).join(', ') : 'None'}. ${metricsContext}`,
         config: {
           responseMimeType: 'application/json',
@@ -104,7 +104,7 @@ export class AIAgent {
     }
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-1.5-flash',
         contents: `Generate 5 realistic inventory items for a company in the ${industry} industry. Include realistic stock quantities and statuses. ${metricsContext}`,
         config: {
           responseMimeType: 'application/json',
@@ -126,7 +126,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text() || '{}');
+      return JSON.parse(response.text || '{}');
     } catch (e: any) {
       console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
       console.log(`[AI Agent] Falling back to mock inventory data.`);
@@ -157,7 +157,7 @@ export class AIAgent {
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-1.5-flash',
         contents: `Generate 4 highly specific market trends for a business in the EXACT industry: ${industry}.
        CRITICAL INSTRUCTIONS: 
        - Combine external market trends with this specific industry.
@@ -196,7 +196,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text() || '{}');
+      return JSON.parse(response.text || '{}');
     } catch(e: any) {
         console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
         console.log(`[AI Agent] Falling back to mock trends data.`);
@@ -221,7 +221,7 @@ export class AIAgent {
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-1.5-flash',
         contents: `Generate 3 distinct, actionable, forward-looking strategic directives based on the local database metrics and real macro-economic news for the ${industry} industry.
        CRITICAL INSTRUCTIONS:
       - The strategies MUST include explicit Supply Chain Guidance based on macro news.
@@ -249,7 +249,7 @@ export class AIAgent {
           }
         }
       });
-      return JSON.parse(response.text() || '{}');
+      return JSON.parse(response.text || '{}');
     } catch(e: any) {
       console.warn(`[AI Agent] API Rate Limit hit, using fallback.`);
             return this.mockStocks(industry);
@@ -345,7 +345,7 @@ export class AIAgent {
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-1.5-flash',
         contents: `Analyze these current news headlines for the ${industry} industry. Generate actionable, structured inventory suggestions (e.g., 'Reorder due to supply chain surge' or 'Discount due to low demand') and a predictive market sentiment statement.
 
 Current Top Inventory Items:
@@ -394,9 +394,9 @@ Return data strictly in JSON formatting matching this schema:
           }
         }
       });
-      return JSON.parse(response.text() || '{}');
+      return JSON.parse(response.text || '{}');
     } catch (e) {
-      console.error('Failed to generate news-driven inventory', e);
+      console.warn('[AI Agent] Rate limit or error on news inventory, using fallback.');
       return this.mockNewsDrivenInventory();
     }
   }
