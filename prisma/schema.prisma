@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String?
+  avatarUrl      String?
+  authProvider   String    @default("email") // "google" or "email"
+  passwordHash   String?   // nullable for OAuth users
+  role           String    @default("admin") // "admin", "member"
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  workspaces     WorkspaceMember[]
+  ownedWorkspaces Workspace[]
+}
+
+model Workspace {
+  id             String    @id @default(uuid())
+  name           String
+  ownerId        String
+  owner          User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  members        WorkspaceMember[]
+  businessProfile BusinessProfile?
+  dataConnections DataConnection[]
+}
+
+model WorkspaceMember {
+  id             String    @id @default(uuid())
+  userId         String
+  workspaceId    String
+  role           String    @default("member") // "admin", "member"
+  joinedAt       DateTime  @default(now())
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model BusinessProfile {
+  id             String    @id @default(uuid())
+  workspaceId    String    @unique
+  companyName    String
+  industry       String
+  businessType   String?
+  country        String?
+  phoneNumber    String?
+  aiEnabled      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model DataConnection {
+  id             String    @id @default(uuid())
+  workspaceId    String
+  type           String    // "postgres", "mysql", "mongodb", "supabase", "firebase", "rest", "csv"
+  name           String
+  credentials    String    // ENCRYPTED connection string or api keys
+  status         String    @default("disconnected") // "connected", "disconnected", "error"
+  lastSyncAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  uploadFiles    UploadFile[]
+}
+
+model UploadFile {
+  id               String         @id @default(uuid())
+  dataConnectionId String
+  fileName         String
+  fileSize         Int
+  fileType         String
+  parsedData       String?        // Encrypted or large JSON text, normally in a storage bucket
+  schemaDetected   String?        // E.g., { "type": "Orders", "columns": [...] } stored as string
+  createdAt        DateTime       @default(now())
+
+  dataConnection   DataConnection @relation(fields: [dataConnectionId], references: [id], onDelete: Cascade)
+}
+
+model AIInsight {
+  id             String    @id @default(uuid())
+  workspaceId    String
+  type           String    // "TREND", "STOCK", "INVENTORY", "GENERAL", "RECOMMENDATION"
+  title          String
+  description    String?
+  confidence     String?
+  action         String?
+  metadata       String?   // JSON string with extra details (e.g. risk, alloc)
+  createdAt      DateTime  @default(now())
+
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}

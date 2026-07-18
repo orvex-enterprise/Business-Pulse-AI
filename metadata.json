@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Business Pulse AI",
+  "description": "AI-powered business assistant monitoring company inventory, trends, and stock market insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,11 +1,26 @@
-<div align="center">
+# Business Pulse AI
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+An AI-powered business assistant that monitors company inventory, trends, and stock market insights and proactively notifies business owners.
 
-  <h1>Built with AI Studio</h2>
+## Tech Stack (Adapted for Node.js/TypeScript environment)
+- **Frontend**: React 19, Vite, Tailwind CSS, ShadCN UI, Zustand, React Query, Framer Motion
+- **Backend**: Express (TypeScript), Google Gen AI SDK
+- **Deployment**: Docker, Cloud Run
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Prerequisites
+- Node.js 20+
+- Gemini API Key
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Setup
+1. Copy `.env.example` to `.env` and add your `GEMINI_API_KEY`
+2. Install dependencies: `npm install`
+3. Run in development: `npm run dev`
+4. Build for production: `npm run build`
+5. Start production server: `npm start`
 
-</div>
+## Docker
+A `Dockerfile` and `docker-compose.yml` are provided for containerized deployment.
+
+```bash
+docker-compose up -d
+```
