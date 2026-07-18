@@ -384,7 +384,7 @@ Return data strictly in JSON formatting matching this schema:
           }
         }
       });
-      return JSON.parse(response.text() || '{}');
+      return JSON.parse(response.text || '{}');
     } catch (e) {
       console.error('Failed to generate news-driven inventory', e);
       return this.mockNewsDrivenInventory();
