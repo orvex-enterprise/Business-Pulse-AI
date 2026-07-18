@@ -70,10 +70,55 @@ export function Login() {
     }
   }
 
-  const handleGoogleAuth = (e: React.MouseEvent) => {
+  const handleGoogleAuth = async (e: React.MouseEvent) => {
     e.preventDefault()
-    // Simulated Google OAuth Flow
-    handleAuth({ preventDefault: () => {} } as any)
+    setError('')
+    setLoading(true)
+    
+    try {
+      const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/signup'
+      const payload = { 
+        email: 'admin@pulse.ai', 
+        password: 'mock_password',
+        name: 'Google User',
+        authProvider: 'google'
+      }
+      
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      
+      const data = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Authentication failed')
+      }
+      
+      login({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role,
+        companyId: data.workspaceId
+      }, data.token)
+      
+      if (data.workspaceId) {
+        localStorage.setItem('currentWorkspaceId', data.workspaceId)
+      }
+      
+      if (data.isNewSignup || !data.hasWorkspace) {
+        navigate('/onboarding')
+      } else {
+        navigate('/')
+      }
+      
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
